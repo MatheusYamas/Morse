@@ -3,10 +3,12 @@ package morse;
 public class ArvoreBinariaMorse {
     private Nodo raiz;
 
+    // inicializar a árvore com um nó vazio
     public void inicializar(){
         this.raiz = new Nodo();
     }
 
+    // método inserir
     public void inserir(String morse, char caracter){
         Nodo atual = this.raiz;
         for (int i = 0; i < morse.length(); i++){
@@ -29,7 +31,7 @@ public class ArvoreBinariaMorse {
         atual.setCaracter(caracter);
     }
 
-
+    // método para buscar um morse
     public char buscar(String morse){
         Nodo atual = this.raiz;
         for (int i = 0; i < morse.length(); i++){
@@ -45,13 +47,14 @@ public class ArvoreBinariaMorse {
             }
         }
         if (atual == null) {
-            System.out.println("Erro");
+            System.out.println("Caracter não existe na árvore");
             return ' ';
         }
 
         return atual.getCaracter();
     }
 
+    //método para buscar uma mensagem
     public String buscarMensagem(String morse){
         String finalM = "";
         String restanteM = "";
@@ -73,6 +76,32 @@ public class ArvoreBinariaMorse {
         return finalM;
     }
 
+    // Método para buscar um morse e abaixo a recursao para buscar o morse
+    public String buscarMorse(char caractere) {
+        return recursaoBuscarMorse(this.raiz, caractere, "");
+    }
+
+    private String recursaoBuscarMorse(Nodo no, char bit, String caminhoAtual) {
+
+        if (no == null) {
+            System.out.println("A letra digitada não existe na árvore");
+            return null;
+        }
+
+        if (no.getCaracter() == bit) {
+            return caminhoAtual;
+        }
+
+        String ladoEsquerdo = recursaoBuscarMorse(no.getEsquerda(), bit, caminhoAtual + ".");
+        if (ladoEsquerdo != null) {
+            return ladoEsquerdo;
+        }
+
+        String ladoDireito = recursaoBuscarMorse(no.getDireita(), bit, caminhoAtual + "-");
+        return ladoDireito;
+    }
+
+    // método para remover o morse digitado
     public void remover(String morse){
         Nodo atual = this.raiz;
         for (int i = 0; i < morse.length(); i++){
@@ -93,23 +122,24 @@ public class ArvoreBinariaMorse {
 
     }
 
+    // método para exibir e sua recursão
     public void exibir(){
-        recursaoExibir(this.raiz, 0);
+        recursaoExibir(this.raiz);
     }
 
-    private void recursaoExibir(Nodo no, int nivel){
+    private void recursaoExibir(Nodo no){
         if (no == null){
             return;
         }
 
-        for (int i = 0; i < nivel; i++){
-            System.out.print("  ");
+        if (no.getCaracter() != ' '){
+            System.out.print(no.getCaracter() + " ");
         }
-        System.out.println(no.getCaracter());
-        recursaoExibir(no.getEsquerda(), nivel + 1);
-        recursaoExibir(no.getDireita(), nivel + 1);
+        recursaoExibir(no.getEsquerda());
+        recursaoExibir(no.getDireita());
     }
 
+    // método para adicionar valores automaticamente na árvore em vez de digitar no inserir
     public void adicionarValores() {
         // Letras
         inserir(".-", 'A');
